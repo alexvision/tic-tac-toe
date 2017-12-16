@@ -41,7 +41,12 @@ contract TicTacToe {
         NewGame(id, _player1, _player2);
         return id - 1;
     }
-    
+    function setWinner(Game _game, address _winner) private pure returns (bool) {
+        _game.winner = _winner;
+        _game.hasWon = true;
+        return true;
+    }
+
     function checkWin(Game _game) private pure returns (bool) {
         address[3][3] memory board = _game.board;
         for (uint i = 0; i < board.length; i++) {
@@ -52,9 +57,7 @@ contract TicTacToe {
                     break;
                 }
                 if (j == 2) {
-                    _game.winner = firstVal;
-                    _game.hasWon = true;
-                    return true;
+                    return setWinner(_game, firstVal);
                 }
             }
             // check vertical
@@ -63,22 +66,16 @@ contract TicTacToe {
                     break;
                 }
                 if (k == 2) {
-                    _game.winner = firstVal;
-                    _game.hasWon = true;
-                    return true;
+                   return setWinner(_game, firstVal);
                 }
             }
         }
         // check diagonals;
         if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-            _game.winner = board[0][0];
-            _game.hasWon = true;
-            return true;
+            return setWinner(_game, board[0][0]);
         }
         if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-            _game.winner = _game.board[0][0];
-            _game.hasWon = true;
-            return true;
+            return setWinner(_game, board[2][0]);
         }
         return false;
     }
